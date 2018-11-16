@@ -1,0 +1,29 @@
+version: '3'
+networks:
+  net0:
+    external:
+      name: chrissoft
+services:
+  redis:
+    deploy:
+      mode: replicated
+      resources:
+        limits:
+          cpus: '1'
+          memory: 128M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 720
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: continue
+        monitor: 60s
+        max_failure_ratio: 0.3
+      replicas: 1
+    networks:
+      - net0
+    ports:
+      - '6379:6379'
+    image: 'library/redis:alpine'
